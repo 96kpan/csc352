@@ -1,0 +1,135 @@
+
+Hide Submission Folder Information
+Submission Folder
+ 
+Assignment 3OriginalityCheck enabled
+Instructions
+ 
+Assignment 3: Arrays, Strings, and Basic Makefiles
+
+The goal of this assignment is to demonstrate facility with arrays and strings in C, as well as with basic Makefiles.
+
+Important Information
+
+Turn in your submission through D2L (go to the class in D2L, click on "Dropbox" at the top, and turn your file in via the "Assignment 3" folder). One of the files you submit will be a makefile named "Makefile"; however, D2L doesn't allow you to submit files without extensions. To get around this problem, rename your makefile to "Makefile.txt" before turning it in. Your makefile must be named "Makefile.txt", not anything else.
+
+Your solution will be compiled and graded on lectura. You should compile and test it on lectura to verify that it will work on that machine.
+
+The output of your program should match the specified output exactly. Your program should not print anything except what is specified in this document (i.e. do not prompt the user to enter something unless this document says to do so). 
+
+Note: failure to follow any of the above may result in a 0 on the assignment. 
+
+In addition to correctness, your program will be graded on the following:
+
+It should compile without warnings (it should compile with -Wall specified).
+It should be broken logically into functions.
+Your program should include meaningful comments, as needed.
+Normal output should be printed to stdout and error output should be printed to stderr.
+It should return a value from main indicating whether it encountered an error.
+There are 3 reference executables that implement this assignment at /home/cs352/summer16/a3/.  You can run these executables to understand how the programs should work.  You do not have read permission for these executables, so you cannot copy them, but you can make a symbolic link to them in a directiory by cd'ing to the directory where you want the link and running a command like "ln -s /home/cs352/summer16/a3/partoracle".
+
+Instructions
+
+In this assignment, you will turn in the source files for 3 separate C programs as well as a Makefile that compiles your 3 programs. Each program is described below. Each program should be contained in its own source file (multiple source files per program is also acceptable). You can name your source files anything you want, but your Makefile must compile them to programs called part (string partitions), editor (text editor), and sim(ship simulation).
+
+String Partitions
+
+This program will partition a string into two parts at all instances of a given character. The user will first input a string (followed by a newline) and then a single character. It is guaranteed that the input string will 100 characters or less. Your program should not prompt the user for this input. Your program will scan through the string and partition the string into two parts at every instance of that character. If there are multiple instances of the given character, your program will print out the partitioned string multiple times. For example, if the user enters: 
+
+The Ag atoms are adjacent.
+a
+
+Your program should output:
+
+[The Ag ],[atoms are adjacent.]
+[The Ag atoms ],[are adjacent.]
+[The Ag atoms are ],[adjacent.]
+[The Ag atoms are adj],[acent.]
+
+The expected output is exactly as shown. Each partition should be surrounded by square braces, and there should be a comma, but no spaces, between the two partitions. The specified letter should be the first letter of the second partition. The partitions should be printed in the order shown: the first printed partition should be based on the first instance of the given character, and so forth. After your program prints all the partitions, it should exit. If the specified character does not exist in the string, your program should print nothing. Also note that the partitioning is case sensitive: if the user enters a, you should not partition on A. Any character, except whitespace, is an acceptable partition character, including letters, numbers, and punctuation.
+
+If an invalid or incomplete input is given, your program should print an error message to stderr and quit with an exit status that indicates an error.
+
+The fgets function, defined in stdio.h, will read a string from stdin until it reaches a newline. To read a maximum of 99 characters into str, use the following command:
+
+fgets(str, 100, stdin);
+
+Note that fgets reads 1 fewer characters than specified to leave space for the null terminator. The return value of fgets is str if the read was successful, or NULL if there was a problem. Also note that fgets includes the newline at the end of the string if a newline was entered, so you need to handle that.
+
+Your program should have a minimum of 2 functions, counting main.
+
+Text Editor
+
+For this program, you will implement a simple text editor. First, the user will enter a string. It is guaranteed that the string will be no more than 100 characters long. You can use the fgets function, explained in the previous section, to read the string. At this point, the user will enter one of the following characters: '-', '~', '^', 'q', which will cause your program to delete a character, replace a character, reverse the string, or quit. Each operation is described in more detail below.
+
+If the user enters '-', your program should go into delete mode. The user will enter another character, and your program will delete the first instance of that character in the provided string.
+
+If the user enters '~', your program should go into replace mode. The user will enter two more characters, and your program will replace the first instance of the first character in the string with the second character.
+
+If the user enters '^', your program will reverse the string. It is acceptable to look online for a string reversal algorithm, but if you do so, you should note clearly in your code where the algorithm comes from.
+
+If the user enters 'q', your program will exit.
+
+An example of all four options is shown below. The user's input is indicated in bold.
+
+The quick brown fox.
+-
+k
+The quic brown fox.
+~
+w
+m
+The quic bromn fox.
+^
+.xof nmorb ciuq ehT
+q
+
+After performing the requested modification, you should print the modified string, followed by a newline. However, if the user entered 'q', you should not print the modified string before quitting. Also, unless the user entered 'q', you should loop back and allow the user to continue modifying the string until they select 'q'. Note that the string modifications are cumulative; each new operation is performed on the string resulting from the previous operation, not the original string entered by the user.
+
+If an invalid or incomplete input is given at any point, your program should print an error message to stderr and quit with an exit status that indicates an error.
+
+Your program should include at least 4 functions, including main.
+
+Ship Simulaton
+
+For this part of the assignment, you will write a program that simulates a ship moving around an area with obstacles. The simulated area is divided into a 20 x 20 grid, with the upper-left square having the coordinates (1,1), the x coordinates increasing when moving right, and the y coordinates increasing when moving down. A picture of the simulated area is shown below.
+Simulated grid
+
+
+While it is possible to represent the simulated area with many different data structures, you should represent it using an array. Please note that coordinates in the simulated area start at 1, but array indicies start at 0, so your program will need to handle the two coordinate systems somehow when reading input and writing output.
+
+When the program starts, the user will first enter the coordinates of the obstacles one at a time, by providing the x and y coordinates for each obstacle, in that order. When the user is done entering the coordinates of obstacles, they will enter "-1". An example is shown below:
+
+5 9
+13 1
+20 5
+-1
+
+This input means that there are obstacles at (5,9), (13, 1), and (20, 5). After this, the user will enter the starting location for the ship by providing an x and y coordinate in the same format. Then, the user will enter the movements of the ship by entering single characters indicating the direction that the ship moves: 'N' for North, 'S' for South, 'E' for East, and 'W' for West. These inputs are case insensitive, so 'N' and 'n' both mean North, etc. There will be whitespace between each character. Since the origin is at the top left, moving North corresponds to moving in the negative y direction, moving East means moving in the positive x direction, and the opposites for South and West, respectively. For each input, your program should simulate the ship moving one grid square in the specified direction, subject to the following rules:
+
+
+If the movement would cause the ship to move out of the simulated area, the ship does not move.
+The first 3 times the ship moves to a square with an obstacle, the obstacle disappears. However, the 4th time the ship moves to a square with an obstacle, the ship sinks. Your program should print out ""SUNK! at x, y", followed by a new line, with x and y replaced with the coordinates at which the ship sank. If the ship sinks, any remaining input should be ignored. Your program should only print out the "SUNK!" message once, regardless of how many inputs remain after the ship has sunk.
+If there is no more input and the ship has not sunk, your program should print out "Survived! Ending location: x, y", with x and y replaced by the final location of the ship, followed by a new line.
+A full example is shown below, with the user's input in bold.
+
+1 2
+1 3
+1 4
+1 5
+-1
+1 1
+s
+s
+s
+s
+SUNK! at 1, 5
+
+If any of the inputs is invalid or incomplete, the program should print an error message to stderr and exit with an exit failure code. The only exception is when the program is reading the directions that the ship is travelling. If the user does not enter 'N', 'S', 'E', or 'W' (or one of those letters in lowercase), your program should print an error message but continue processing inputs.
+
+Your program should have a minimum of 2 functions, including main, but more functions would be better for this program.
+
+
+Makefile
+
+The final deliverable for this assignment is a makefile that builds the other three programs. Your makefile should be called Makefile (case sensitive), but when you turn it in to D2L, you will have to rename it to Makefile.txt. Your makefile should produce executables called part (for the string partitions), editor (for the text editor), and sim (for the ship simulation). You can use any compile commands that you want, except that you must use gcc as the compiler and use the -Wall command to check for warnings. You should also include the targets "all" to build all 3 programs, and "clean" to remove the three programs and any intermediate files.

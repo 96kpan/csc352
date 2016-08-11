@@ -1,0 +1,120 @@
+Assignment 2: Basic C Programming
+
+The goal of this assignment is to demonstrate basic C programming skills.
+
+Important Information
+
+You must turn in one C source file called a2.c. Turn in your submission through D2L (go to the class in D2L, click on "Dropbox" at the top, and turn your file in via the "Assignment 2" folder). 
+
+Your solution will be graded on lectura. It will be compiled with the command
+
+gcc -Wall a2.c
+
+You should compile and test your program on letura using the above command to verify that it will work on that machine with that command.
+
+The output of your program should match the specified output exactly. Your program should not print anything except what is specified in this document (i.e. do not prompt the user to enter something unless this document says to do so). 
+
+Note: failure to follow any of the above may result in a 0 on the assignment. 
+
+In addition to correctness, your program will be graded on the following:
+
+It should compile without warnings
+It should be broken logically into functions (a minimum of 4)
+Each function should have a comment at the beginning describing what it does
+Normal output should be printed to stdout and error output should be printed to stderr
+It should return a value from main indicating whether it encountered an error. In this assignment, there are no errors that should cause your program to exit, so you should return '0' from main.
+There is a reference binary that implements this assignment at /home/cs352/summer16/a2/a2oracle.  You can run this executable to understand how the program should work.  There is also a grading script available on lectura that you can run to determine how well your program matches the spec.  Instructions for how to use it are available on Piazza (https://piazza.com/class/ioukq1ug6sf6n6?cid=119).
+
+Instructions
+
+For this assignment, you will implement a simple menu system. The user will select an item from the menu, and that will determine what your program will do.
+
+Main Menu
+
+When the program starts, it should display the following menu to the user:
+
+1. Shape Printer
+2. Circular Chars
+3. Factors
+4. Exit
+What would you like to do?
+
+This can be done with the following code (note the space following the question at the end).  You are encouraged to copy and paste this code into your assignment.
+
+printf("1. Shape Printer\n");
+printf("2. Circular Chars\n");
+printf("3. Factors\n");
+printf("4. Exit\n");
+printf("What would you like to do? \n");
+
+The program should then let the user enter a single character and press enter. If the user selects 1, 2, or 3, the program should transition to the corresponding problem below. If the user enters 4, or if there is no more input, the program should exit. If the user enters anything else, the program should print an error message to stderr and display the menu again.
+
+Shape Printer
+
+This option will allow the user to print a shape in asterisks. The program should not print out anything except the shape. The user will enter one of the following:
+
+s 5
+t 4
+r 3 7 
+
+If the user enters 's', you should print out a square. The number following the 's' indicates the size of the square. If the user enters 't', you should print out a triangle. The number following the 't' indicates the size of the triangle. If the user enters 'r', you should print out a rectangle. The two numbers following the 'r' indicate the height and width of the rectangle, in that order. Example shapes are shown below:
+
+A square with size 4: 
+
+****
+****
+****
+****
+
+A triange with size 5: 
+
+*
+**
+***
+****
+*****
+
+A rectangle with height 3 and width 7: 
+
+*******
+*******
+*******
+
+After printing the shape, you should print a new line and then print the main menu again. If the user inputs an incorrect entry (a character other than 's', 't', or 'r', a number less than or equal to zero, etc.), you should print an error message to stderr and then print the main menu.
+
+For extra credit, you can also implement a parallelogram. The user will enter 'p', followed by the height and width (similar to a rectangle). Here is an example of a parallelogram with height 3 and width 7:
+
+*******
+ *******
+  *******
+
+Circular Chars
+
+For this option, the user will enter a char and the program will print the entire alphabet or number set, in continuous order until you would return to the specified char. You should not print anything else. You should use the same case as the letter that was entered. For example:
+
+The user types: X
+The program should output: XYZABCDEFGHIJKLMNOPQRSTUVW
+
+The user types: h
+The program should output: hijklmnopqrstuvwxyzabcdefg
+
+The user types: 5
+The program should output: 5678901234
+
+After doing this, your program should print out a newline and then return to the main menu. If the user types something other than a letter or number, you should print an error message to stderr and return to the main menu.
+
+Factors
+
+For this option, the user will enter two numbers and your program should print all numbers between the two numbers that have exactly two distinct factors.  This search should be inclusive, meaning the two numbers the user enters should be checked, along with the numbers between them.  As a reminder, x is a factor of y if y is divisible by x.  Every number has itself and 1 as a factor, but for the purposes of this assignment, you should ignore those two factors.  You are looking for distinct factors, meaning that if a number can be divided by one of its factors multiple times, that factor only counts once (for example, 4 can be divided by 2 twice, but 2 only counts as one factor).  Here are some more examples:
+
+9 has one distinct factor (3), so your program should not print it. 
+8 has two distinct factors (2 and 4), so your program should print it.
+12 has four distinct factors (2, 3, 4, and 6), so your program should not print it.
+13 has zero distinct factors, so your program should not print it.
+
+As an example, if the user enters 14 16, your program should print out:
+
+14
+15
+
+If there are no numbers with exactly two distinct factors in the specified range, your program should print nothing. If the user makes an incorrect entry (enters a number less than or equal to 1, makes the second number smaller than the first number), your program should print an error message to stderr. In any case, your program should return to the main menu after performing the required tasks.

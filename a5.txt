@@ -1,0 +1,74 @@
+
+Hide Submission Folder Information
+Submission Folder
+ 
+Assignment 5OriginalityCheck enabled
+Instructions
+ 
+Assignment 5: Binary Search Trees
+
+The goal of this assignment is to demonstrate facility with pointers, dynamic memory allocation, and binary search trees.
+
+Important Information
+
+Turn in your submission through D2L (go to the class in D2L, click on "Dropbox" at the top, and turn your file in via the "Assignment 5" folder). One of the files you submit will be a makefile named "Makefile"; however, D2L doesn't allow you to submit files without extensions. To get around this problem, rename your makefile to "Makefile.txt" before turning it in. Your makefile must be named "Makefile.txt", not anything else.
+
+Your solution will be compiled and graded on lectura. You should compile and test it on lectura to verify that it will work on that machine. If your program does not compile on lectura, you will likely recieve a low score on the assignment. Be very careful to ensure that the files you turn in can be compiled on lectura - a program that doesn't compile can't be tested, and thus you will lose most of the points on the assignment.
+
+The output of your program should match the specified output exactly. Your program should not print anything except what is specified in this document (i.e. do not prompt the user to enter something unless this document says to do so). 
+
+Note: failure to follow any of the above may result in a 0 on the assignment. 
+
+In addition to correctness, your programs will be graded on the following:
+
+They should compile without warnings (with -Wall specified).
+They should be well designed.  Specifically, they should be broken logically into functions.  Also, the binary search tree code should be in a separate .c file from the rest of the code, and you should have a .h file with the binary tree function prototypes and any other definitions a user needs to access the tree.
+They should include meaningful comments. There must be a comment at the beginning of every function, including main.
+Normal output should be printed to stdout and error output should be printed to stderr.
+They should return a value from main indicating whether there was an error.
+Running with valgrind should not report any pointer errors or memory leaks.
+You must use a binary search tree in your program.
+You are not allowed to use calloc or realloc in your program.
+Instructions
+
+In this assignment, you will build a binary search tree and use it in a program that keeps track of scores in a tournament. You must use a binary search tree in your program - if you do not, you will lose a significant amount of credit. You will also turn in a Makefile that compiles your program. You can name your .c source files anything you want, but your makefile must be named Makefile (and turned in as Makefile.txt), and it must produce an executable called scores. If your executable is called anything else, the tester may not be able to find your executable, and you may get a very low score on the assignment.
+
+An "oracle" program that has the correct behavior will be provided in /home/cs352/summer16/a5. You can run it to understand how the program should behave.
+
+Tournament Scores
+
+Your program will keep track of the wins and losses of each player in a tournament. The input will be a list of scores from games in the tournament: the first player's name, followed by whitespace, followed by their score, followed by whitespace, followed by the second player's name, followed by whitespace, followed by their score. This pattern will repeat any number of times, with whitespace between each set of scores. An example input is given below.
+
+a 15 b 17
+c 20 b 21
+
+In this example, player a played against player b in the first game. Player a scored 15 points and player b scored 17 points. In the second game, player c played against player b, with player c scoring 20 points and player b scoring 21 points. The player with the higher score wins. Your program must read in the scores from each game, determine who won each game, and keep track of each player's wins and losses in a binary search tree. Note that you are only keeping track of the number of times each player wins and loses, not the total number of points. The number of points is only used to determine the winner and loser. You are guaranteed that each player's name will be 20 characters or less, and that it will not contain whitespace.
+
+The list of scores is complete when scanf returns EOF. At this point, you should print out the players in alphabetical order, along with their number of wins and loses. Each player should be printed in the format "player name, number of wins, number of losses\n". For example, if player a had 10 wins and 5 losses, you would print "a, 10, 5" followed by a newline, and you would repeat this pattern for each player.
+
+If your program encounters an error, you should print a meaningful error message to stderr and exit with a non-zero exit code. Errors include any of the following:
+
+You do not get two player names and two scores in the input.
+The game is a tie. Ties are not allowed, so if the two scores are the same, this is an error.
+The two player names are the same. A player cannot play against themselves.
+There is a problem allocating memory (malloc returns NULL).
+Note that getting EOF back from scanf is not an error; it means the user is done entering scores. The only time you would report an error after getting EOF is if the input is incomplete (you ony got one player name and score, for example.).
+
+Binary Search Tree
+
+You will store your score information in a binary search tree (BST). A BST is a kind of (key, value) store: the data you are storing is the value and you look it up using the key. For example, in a contact list, the name is the key and the phone number is the value (you use the person's name to find their phone number). Wikipedia has some good information on BSTs: https://en.wikipedia.org/wiki/Binary_search_tree. As with previous assignments, you can look up BST implementations online and try to understand how they work, but THE CODE YOU TURN IN MUST BE YOUR OWN. Note that you do not need to implement a full BST; your tree will need to support insert and find operations, and must be able to print its elements in order (look up inorder traversals to see how to do this). However, you do not need to implement the delete function. Your tree does, however, need to clean up after itself and delete all memory it uses when it is done with it.
+
+Your BST will store elements of type "struct Player", which is shown below. A file player.h will be provided in /home/cs352/summer16/a5 that contains this struct. You can use and turn in this file with your assignment, or you can copy its contents into one of your files.
+
+struct Player {
+char * name;
+int wins;
+int losses;
+};
+
+The keys in your BST will be the player name, and the values will be the entire Player struct. Your tree and scores program will both allocate memory, and that memory must be freed when it is no longer needed. Valgrind will be a useful tool in determining whether your program has memory leaks.
+
+
+Makefile
+
+The final deliverable for this assignment is a makefile that builds your scores program. Your makefile should be called Makefile (case sensitive), but when you turn it in to D2L, you will have to rename it to Makefile.txt. You can name your source files anything you want, but your makefile should produce an executable called scores. You can use any compile commands that you want, except that you must use gcc as the compiler and use the -Wall command to check for warnings. You should also include the targets "all" to build the program, and "clean" to remove the program and any intermediate files. You should be especially careful to ensure that the Makefile you turn in will compile your program correctly on lectura, and that it gives the executable the correct name. If your Makefile doesn't work correctly, your program doesn't compile, or your executable has the wrong name, the rest of the tests may not run, and you make get a very low score on the assignment.

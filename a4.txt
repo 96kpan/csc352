@@ -1,0 +1,89 @@
+Assignment 4: Linked List
+
+The goal of this assignment is to demonstrate facility with pointers, dynamic memory allocation, and linked lists.
+
+Important Information
+
+Turn in your submission through D2L (go to the class in D2L, click on "Dropbox" at the top, and turn your file in via the "Assignment 4" folder). One of the files you submit will be a makefile named "Makefile"; however, D2L doesn't allow you to submit files without extensions. To get around this problem, rename your makefile to "Makefile.txt" before turning it in. Your makefile must be named "Makefile.txt", not anything else.
+
+Your solution will be compiled and graded on lectura. You should compile and test it on lectura to verify that it will work on that machine. If your program does not compile on lectura, you will likely recieve a low score on the assignment.
+
+The output of your program should match the specified output exactly. Your program should not print anything except what is specified in this document (i.e. do not prompt the user to enter something unless this document says to do so). 
+
+Note: failure to follow any of the above may result in a 0 on the assignment. 
+
+In addition to correctness, your programs will be graded on the following:
+
+They should compile without warnings (with -Wall specified).
+They should be broken logically into functions.
+They should include meaningful comments. There must be a comment at the beginning of every function, including main.
+Normal output should be printed to stdout and error output should be printed to stderr.
+They should return a value from main indicating whether there was an error.
+Running with valgrind should not report any errors except memory leaks - memory leaks are acceptable for this assignment.
+Instructions
+
+In this assignment, you will turn in the source files for 2 separate C programs, a source file for a linked list, and a Makefile that compiles your programs. Each part of the assignment is described below. Each program should be contained in its own source file, and the linked list code should be in a separate source file (multiple source files per program is also acceptable). You can name your source files anything you want, but your Makefile must compile them to programs called driver (driver program), and mru (most recently used).
+
+"Oracle" programs that have the correct behavior will be provided in /home/cs352/summer16/a4. You can run these to understand how the programs should behave.
+
+Error handling
+
+Your programs should handle all invalid inputs by printing a message to stderr and exiting with a non-zero exit status. This includes the cases where you get an EOF from scanf or fewer inputs from scanf than expected (including the case where a user enters a letter but should have entered a number). You should treat system errors, such as errors returned from malloc, the same way: print an error to stderr and exit with a non-zero exit status. There is one exception to this rule: each of your programs has a "main loop" where you are waiting for inputs from the user. If you get an EOF in this main loop, it means the user is done entering commands and your program should exit (with an error code of 0) after doing any final processing.
+
+Linked List
+
+You will implement a singly linked list, meaning that the head of the list has a pointer to the first element and each element has a pointer to the next element (but not a pointer to the previous element). If you need more information about linked lists, the Wikipedia article is a good place to start (https://en.wikipedia.org/wiki/Linked_list#Singly_linked_list). Your linked list must create its nodes dynamically using malloc and free - you must not use an array to implement your linked list, and you are not allowed to use realloc or calloc. Everything you malloc should be free'd - you should not have any memory leaks in your program. We will use valgrind in our testing to verify the absence of memory leaks.
+
+The functions that your list must implement are listed and described in /home/cs352/summer16/a4/llist.h. You are free to use and modify this file and turn it in as part of your assignment. This file lists the prototypes for the functions that you will need to implement and describes how each one should work. You will need to fill in the structs at the top of the assignment to define your list, and you will need to create a separate .c file that implements the functions listed in llist.h. Note that your linked list will not be a stand-alone program (it will not have a main function); it will provide functions that can be used by other programs.
+
+In general, each node of your list will store two integers, named x and y. x will be used as the "key" for the list, so when you are searching through the list for a specific integer, you should search for the the first node in which x matches the integer you are searching for (it does not matter what the value of y is in that node).
+
+There are many linked list implementations online. It is acceptable to look at these implementations to understand how they work, but THE CODE YOU TURN IN MUST BE YOUR OWN. You are not allowed to copy code from the internet and turn it in as part of your assignment - you must write all code yourself.
+
+
+Driver Program
+
+The first program you turn in will be a simple driver program that allows a user to test your linked list. Your source file will need to #include "llist.h" so that it can access the functions in your linked list. Your program will accept one character commands from the user and perform operations on your list based on the commands.
+
+When your program starts up, it should create an empty linked list. It should then modify the linked list based on the following.
+
+If the user inputs 'C' or 'c', you should destroy the current linked list (including freeing all memory allocated for that list) and create a new, empty list.
+
+If the user inputs 'A' or 'a', they will then enter an integer. You should add a new entry to the head of the list where x = the integer they entered and y = 0.
+
+If the user inputs 'F' or 'f', they will then enter an integer. You should search through the list and find the first entry for which x = the number they entered. You should then increment y for that entry and write it back to the list. The entry should not change positions in the list; you just want to update the value of y in place. You should then print out the updated value of x and y in the format "x, y\n" - so if x was 3 and y was 5 after you incremented it, you would print "3, 5", followed by a new line. If you do not find a matching entry in the list, you should not print anything.
+
+If the user inputs 'R' or 'r', they will then enter an integer. You should remove the first entry from the list for which x equals the number they entered. You should also print out the entry you removed in the format "x, y\n". If there is no matching entry in the list, you should do nothing, and you shouldn't print out anything.
+
+If the user inputs 'P', or 'p', you should print out the entire list, starting at the head. You can use the LList_print function (described in llist.h) to do this. llist.h describes the format that the list should be printed in.
+
+When you reach the end of the input (scanf returns EOF), you should destroy the remaining list (including freeing all memory), and quit, returning 0 from main.
+
+If the input is invalid at any point, you should print an error to stderr and exit the program with a non-zero return value. The only exception is when you are waiting for the user to type one of the letters listed above - in that case, if you get an EOF back from scanf, it's not an error - it just means it's time to destroy your list and end the program. Any other error should cause the program to exit with a non-zero return code, after printing an error to stderr.
+
+
+Most Recently Used (MRU) List
+
+Many programs implement a "most recently used" or MRU list, which keeps track of which file the user has accessed most recently. For example, if you open Microsoft Word (depending on the verion), it will show you a list along the left side of the last few files you have opened, with the most recent file at the top. For this part of the assignment, you will implement something like an MRU list. However, since our list holds integers, you will be tracking the most recent integers.
+
+The input to this program will just be a list of integers. If the user inputs anything other than an integer, your program should print an error to stderr and exit with a non-zero return code. Your program should keep track of the order in which the integers are entered (with the most recent first) and the number of times each integer has appeared. When the user finishes entering integers (scanf returns EOF), you should print out all the integers you have seen along with the number of times it appeared, starting with the most recent and going to the oldest. The format to print them out in is "integer, times it appeared\n". For example, if the user enters:
+
+5
+7
+5
+9
+
+yor program should print out:
+
+9, 1
+5, 2
+7, 1
+
+indicating that 9 was the most recent (i.e. last) integer you saw, and it appeared once, 5 was the second most recent integer, and it appeared twice, and so on. Note that even though 5 was input twice, it only appears in the output once, with a 2 indicating that it was in the input twice.
+
+You should implement your MRU list using the linked list that you created for this assignment. Your source file will need to #include llist.h so that you can use the linked list functions you created.
+
+
+Makefile
+
+The final deliverable for this assignment is a makefile that builds the other programs. Your makefile should be called Makefile (case sensitive), but when you turn it in to D2L, you will have to rename it to Makefile.txt. You can name your source files anything you want, but your makefile should produce executables called driver (for the driver), and mru (for the MRU list). You can use any compile commands that you want, except that you must use gcc as the compiler and use the -Wall command to check for warnings. You should also include the targets "all" to build both programs, and "clean" to remove the programs and any intermediate files. Please note that you should need only one copy of the linked list code. If you compile the linked list code to an object file, you can link the object file into both executables.

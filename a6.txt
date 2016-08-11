@@ -1,0 +1,82 @@
+Assignment 6: Hash Tables
+
+The goal of this assignment is to demonstrate facility with pointers, dynamic memory allocation, command line arguments, file I/O, and hash tables.
+
+Important Information
+
+Turn in your submission through D2L (go to the class in D2L, click on "Assignments" at the top, and turn your file in via the "Assignment 6" folder). One of the files you submit will be a makefile named "Makefile"; however, D2L doesn't allow you to submit files without extensions. To get around this problem, rename your makefile to "Makefile.txt" before turning it in. Your makefile must be named "Makefile.txt", not anything else.
+
+Your solution will be compiled and graded on lectura. You should compile and test it on lectura to verify that it will work on that machine. If your program does not compile on lectura, you will likely recieve a low score on the assignment. Be very careful to ensure that the files you turn in can be compiled on lectura - a program that doesn't compile can't be tested, and thus you will lose most of the points on the assignment.
+
+The output of your program should match the specified output exactly. Your program should not print anything except what is specified in this document (i.e. do not prompt the user to enter something unless this document says to do so). 
+
+Note: failure to follow any of the above may result in a 0 on the assignment. 
+
+In addition to correctness, your programs will be graded on the following:
+
+They should compile without warnings (with -Wall specified).
+They should be well designed.  Specifically, they should be broken logically into functions.  Also, the hash table code should be in a separate .c file from the rest of the code, and you should have a .h file with the hash table function prototypes and any other definitions a user needs to access the hash table.
+They should include meaningful comments. There must be a comment at the beginning of every function, including main.
+Error output should be printed to stderr.
+They should return a value from main indicating whether there was an error.
+Running with valgrind should not report any pointer errors or memory leaks.
+You must use a hash table in your program.
+You are not allowed to use calloc or realloc in your program.
+Instructions
+
+In this assignment, you will build a hash table and use it in a program that counts the frequency of words in several files. You must use a hash table in your program - if you do not, you will lose a significant amount of credit. You will also turn in a Makefile that compiles your program. You can name your .c source files anything you want, but your makefile must be named Makefile (and turned in as Makefile.txt), and it must produce an executable called wf. If your executable is called anything else, the tester may not be able to find your executable, and you may get a very low score on the assignment.
+
+An "oracle" program that has the correct behavior will be provided in /home/cs352/summer16/a6. You can run it to understand how the program should behave.
+
+Word Frequency
+
+You will write a program that counts the frequency of words in a set of files. The user will provide one or more file names as command line arguments. Your program will open each of these files, read all of the words out of the files, and keep track of the number of times each word occurs across all the files. You must store the words and the number of times they occur in a hash table (see below); if you use a different data structure, you will lose a significant number of points.
+
+For the purposes of this assignment, words are delimited by whitespace. Any sequence of non-whitespace characters is considered a word. After reading each word, you should remove any punctuation and change all letters to lower case before doing any other processing. Thus, "You're" and "youre" count as the same word. This also means that words with only punctuation and no whitespace between them are counted as a single word; for example, the string "that--especially" would become the word "thatespecially" for the purposes of this assignment. Each word should be stored in the hash table along with the number of times it occurs, and the count of occurrences should be incremented each time you encounter a given word.  For this assignment, you are guaranteed that words will be 1024 characters or less.
+
+Once you have read and counted all the words in all the files, you should write out each word (in all lower case, with no punctuation), followed by a comma, followed by the number of times that word occured, followed by a newline. This should be written to a file called "wordfrequency.txt". If this file already exists, you should erase its contents before writing your results. You can write the words to the file in any order. Note that your program should not read anything from stdin or write anything to stdout (though you will write to stderr if there is an error).
+
+A full example is shown below. The user runs "wf input1 input2" and the program outputs "wordfrequency.txt". The contents of each file are shown below.
+
+Contents of input1:
+To be or not to be.
+
+Contents of input2:
+Do be do be--do.
+
+Contents of wordfrequency.txt after running "wf input1 input2" (remember, these words can be written to the file in any order):
+bedo, 1
+be, 3
+do, 2
+not, 1
+or, 1
+to, 2
+
+Your program should free all dynamically allocated memory when it is done with it (valgrind should not report any pointer errors or memory leaks). Your program should also close all files when it is done with them.
+
+If your program encounters an error, you should print and error message to stderr and exit with a non-zero exit code. This includes malloc errors, file errors, input errors, etc. It is also considered an error if the user does not provide any command line arguments.
+
+Hash Table
+
+You will store your word counts in a hash table with buckets that are linked lists. A hash table is a kind of (key, value) store: the data you are storing is the value and you look it up using the key. For example, in a contact list, the name is the key and the phone number is the value (you use the person's name to find their phone number). Binary trees are also (key, value) stores, and binary trees and hash tables can often be used interchangeably. (However, for this assignment, you are required to use a hash table). A hash table stores the values in a fixed size array, but the array element that a given value is stored in is determined by a "hash" function that turns the key into an index into the array. Here is an example hash function that operates on strings (which implements the djb2 algorithm from http://www.cse.yorku.ca/~oz/hash.html):
+
+int hash(char * data, int size) {
+  unsigned long hash = 5381;
+  char * p;
+  for (p = data; *p != '\0'; ++p) {
+    hash = (hash * 33) + *p;
+  }
+  return (int)(hash % size);
+}
+
+In this example, size is the size of the array that makes up the hash table, and the hash function turns a string into an index into that array. Don't ask me why this function works, but it does. You are welcome to use it in your program (but if you do so, please include the website it was taken from as attribution). When an element is stored in the hash table, this function is called to determine which index to store that element in. To look up the element, this function is called again to determine which index the element is stored in. This allows a user to store a large number of elements in a fixed-size array and look them up quickly.
+
+As you may have noticed, hash tables work well until there is a collision, meaning that two keys hash to the same value. For example, if the hash function above returns the number 7 for two different strings, they would need to be stored in the same element in the array. You will solve this problem by making each bucket of your hash table a linked list - when an element is added to the bucket, it is added to the linked list, and finding an element in the table means finding the correct bucket in the hash table and then searching through the linked list for it. You can reuse your linked list implementation from assignment 4 (with some small changes), or you can create a linked list implementation for this assignment. Note that the linked list for this assignment is relatively simple - you need to be able to add items, find items, and print the list, but you don't need to remove items.
+
+The keys in your hash table will be the words that you read out of the files, and the data will be the word along with the number of times it has occurred. You should try to design your hash table carefully. For example, if you keep the linked list implementation in separate functions from the hash table implementation, it will be simpler to write both, and your hash table can simply call the functions in your linked list. In addition, you should pay careful attention to dynamic memory management. Your list, hash table, and word frequency program will all allocate memory, and that memory must be freed when it is no longer needed. Valgrind will be a useful tool in determining whether your program has memory leaks.
+
+If you need more information on hash tables, there is plenty of information on the internet. One example is here: http://www.sparknotes.com/cs/searching/hashtables/section1.rhtml. Keep in mind that our hash table uses linked lists to deal with collisions (often called chaining); there are many other algorithms that handle collisions in different ways, but your hash table must use linked lists in its buckets to deal with collisions.
+
+Makefile
+
+The final deliverable for this assignment is a makefile that builds your program. Your makefile should be called Makefile (case sensitive), but when you turn it in to D2L, you will have to rename it to Makefile.txt. You can name your source files anything you want, but your makefile should produce an executable called wf. You can use any compile commands that you want, except that you must use gcc as the compiler and use the -Wall option to check for warnings. You should also include the targets "all" to build the program, and "clean" to remove the program and any intermediate files. You should be especially careful to ensure that the Makefile you turn in will compile your program correctly on lectura, and that it gives the executable the correct name. If your Makefile doesn't work correctly, your program doesn't compile, or your executable has the wrong name, the rest of the tests may not run, and you make get a very low score on the assignment.

@@ -1,0 +1,45 @@
+Assignment 7: Makefiles and Shell Scripts
+
+The goal of this assignment is to demonstrate facility with makefiles and shell scripts.
+
+Important Information
+
+Turn in your submission through D2L (go to the class in D2L, click on "Assignments" at the top, and turn your files in via the "Assignment 7" folder).
+
+Your solution will be graded on lectura. You should test it on lectura to verify that it will work on that machine. If your program does not work on lectura, you will likely recieve a low score on the assignment. Be very careful to ensure that the files you turn in will run on lectura - a program that doesn't run can't be tested, and thus you will lose most of the points on the assignment. Be especially careful to ensure that you turn in the files that you expect to turn in, and that you do not turn in an older version of your code by accident.
+
+For this assignment, the output of your program (to stderr and stdout) will not be tested. However, your submissions should perform the specified operations exactly. Your files should also have comments describing what they do.
+
+Note: failure to follow any of the above may result in a 0 on the assignment.
+
+Instructions
+
+In this assignment, you will create a make file and a a shell script that perform the same functions. An oracle program will be provided; however, the oracle program will be written in C and compiled (since it is impossible to run a shell script or makefile without read access to it).
+
+The following commands may be useful in this assignment:
+
+mkdir -p foo creates a directory called "foo" if it does not exist; otherwise, it does nothing
+tar czf archive.tar.gz inputfile1 inputfile2 creates an archive called archive.tar.gz containing the specified input files (you can provide any number of input files).
+date -r bar +%s prints the modification time of the file "bar", expressed as the number of seconds since midnight on Jan 1, 1970.
+Makefile
+
+Your makefile will operate on a directory containing PowerPoint (.ppt) files. The task of the makefile will be to convert each of the PowerPoint files to PDFs, copy all of the ppt and pdf files into an archive, and then copy the archive to another diretory. Your makefile should do the following:
+
+For each ppt file in the current directory, check if a pdf file with the same name exists. If not, or if the ppt file is newer than the pdf file, your makefile should convert the ppt to a pdf. The names of the two files will be the same, except for the extension (so if there is a file called lecture1.ppt, you will create a file called lecture1.pdf). You can assume that the ppt on the end of the file name is lower case.  You can also assume that the command ppttopdf file1.ppt will create a pdf file called file1.pdf. A version of the ppttopdf command will be made available to you in the /home/cs352/summer16/a7 directory.
+Your makefile should then put all the ppt and pdf files into an archive called lectures.tar.gz. The command to do so is tar; for example, tar czf outputfile.tar.gz file1 file2 would put file1 and file2 into an archive called outputfile.tar.gz. Your makefile should only create the archive file if it does not exist, or if any of the pdf or ppt files is newer than the archive file.
+Your makefile should then copy lectures.tar.gz into a subdirectory of the current directory called www. It should create this directory if it doesn't exist. However, it should not do either of these steps unless a new archive file was created in the previous step.
+Your makefile should be set up such that typing "make" (without specifying a target) in the directory with the makefile performs the above actions.
+Your makefile should also implement a "clean" option: if the user types "make clean", it should delete all the pdf files and lectures.tar.gz (but not the ppt files).  It should only delete lectures.tar.gz in the current directory, NOT in the www directory.
+You are required to use macros in your makefile - any command or file name that is repeated multiple times should be converted to a macro. You are also required to use comments to describe what your makefile does (comments in a makefile start with '#').
+
+Since D2L will not accept files without extensions, when you turn in this makefile, you should name it Makefile.txt. This name is case sensitive. You should not name this makefile anything else, or it may not be graded and you may receive a low score.
+
+Shell Script
+
+You must also create a shell script called "lecarchive.sh". You may create your script for any shell (bash, csh, etc), as long as it works on lectura. You are required to use a shell scripting language, though, not a higher level language such as Python. If you are not sure if your chosen scripting language is acceptable, please check with the instructor. Your script should perform exactly the same tasks as your makefile -- it should scan through the current directory and convert ppt files to pdf files as needed, and then create a new archive file if needed. The commands for creating pdf and archive files are given in the previous section.
+
+Note that this file should also implement a "clean" command - so running "lecarchive.sh" should update the archive as described above, but running "lecharchive.sh clean" should delete the pdf and archive files.
+
+As with the makefile, you are required to include comments in your script describing what it does.
+
+You should name this file lecarchive.sh (this name is case sensitive). If you name your shell script something else, it may not be graded, and you may recieve a very low score.
