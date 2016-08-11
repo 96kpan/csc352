@@ -1,0 +1,23 @@
+CC=gcc
+CFLAGS=-Wall -g
+
+.PHONY: all clean
+
+all: driver mru
+
+driver: llist.o driver.o
+	$(CC) $(CFLAGS) llist.o driver.o -o driver
+
+mru: mru.o llist.o
+	$(CC) $(CFLAGS) mru.o llist.o -o mru
+
+driver.o: driver.c 
+	$(CC) $(CFLAGS) -c driver.c
+
+llist.o: llist.c 
+	$(CC) $(CFLAGS) -c llist.c
+
+mru.o: mru.c
+	$(CC) $(CFLAGS) -c mru.c
+clean:
+	rm -f llist.o driver.o driver mru mru.o
